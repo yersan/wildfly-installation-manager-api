@@ -3,16 +3,16 @@ name: Build
 on:
   push:
     branches:
-      - main
+    - main
     paths-ignore:
-      - '.gitignore'
-      - 'LICENSE'
-      - 'README.md'
+    - '.gitignore'
+    - 'LICENSE'
+    - 'README.md'
   pull_request:
     paths-ignore:
-      - '.gitignore'
-      - 'examples'
-      - 'README.md'
+    - '.gitignore'
+    - 'examples'
+    - 'README.md'
   workflow_dispatch:
 
 jobs:
@@ -22,23 +22,17 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ ubuntu-latest, windows-latest ]
-        jdk: [ 11, 17 ]
+        os: [ ubuntu-latest ]
+        jdk: [ 11, 17, 21 ]
     steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - uses: actions/cache@v4
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
-      - name: Set up JDK ${{ matrix.jdk }}
-        uses: actions/setup-java@v2
-        with:
-          java-version: ${{ matrix.jdk }}
-          distribution: 'adopt'
-          cache: maven
-      - name: Build and test
-        run: mvn clean install
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - name: Set up JDK ${{ matrix.jdk }}
+      uses: actions/setup-java@v4
+      with:
+        java-version: ${{ matrix.jdk }}
+        distribution: 'adopt'
+        cache: maven
+    - name: Build and test
+      run: mvn clean install
