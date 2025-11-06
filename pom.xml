@@ -8,10 +8,14 @@
     <artifactId>installation-manager-api</artifactId>
     <version>2.0.0.Beta2-SNAPSHOT</version>
 
+    <name>WildFly Installation Manager API</name>
+    <description>This project is the API for installation manager integration in WildFly.</description>
+    <url>https://github.com/wildfly-extras/wildfly-installation-manager-api.git</url>
+
     <parent>
         <groupId>org.jboss</groupId>
         <artifactId>jboss-parent</artifactId>
-        <version>47</version>
+        <version>50</version>
         <relativePath/>
     </parent>
 
@@ -28,9 +32,29 @@
         <url>https://developers.redhat.com/</url>
     </organization>
 
+    <developers>
+        <developer>
+            <id>yersan</id>
+            <name>Yeray Borges</name>
+            <url>https://github.com/yersan</url>
+            <organization>IBM</organization>
+            <organizationUrl>https://www.ibm.com</organizationUrl>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git://github.com/wildfly-extras/wildfly-installation-manager-api.git</connection>
+        <developerConnection>scm:git:ssh://github.com/wildfly-extras/wildfly-installation-manager-api.git
+        </developerConnection>
+        <url>https://github.com/wildfly-extras/wildfly-installation-manager-api.git</url>
+    </scm>
+
     <properties>
         <maven.compiler.release>17</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- Nexus deployment settings -->
+        <nexus.repository.staging>wildfly-staging</nexus.repository.staging>
+        <nexus.staging.tag>installation-manager-api-${project.version}</nexus.staging.tag>
     </properties>
 </project>
 
