@@ -7,8 +7,8 @@ public class ManifestVersionChange {
 
     private final String channelName;
     private final String location;
-    private final String currentVersion;
-    private final String newVersion;
+    private final ManifestVersionPair currentVersion;
+    private final ManifestVersionPair newVersion;
     private final boolean isDowngrade;
 
     /**
@@ -20,7 +20,7 @@ public class ManifestVersionChange {
      * @param newVersion the new manifest version to be updated to
      * @param isDowngrade is this version change considered a downgrade?
      */
-    public ManifestVersionChange(String channelName, String location, String currentVersion, String newVersion, boolean isDowngrade) {
+    public ManifestVersionChange(String channelName, String location, ManifestVersionPair currentVersion, ManifestVersionPair newVersion, boolean isDowngrade) {
         this.channelName = channelName;
         this.location = location;
         this.currentVersion = currentVersion;
@@ -45,14 +45,14 @@ public class ManifestVersionChange {
     /**
      * @return current manifest version
      */
-    public String getCurrentVersion() {
+    public ManifestVersionPair getCurrentVersion() {
         return currentVersion;
     }
 
     /**
      * @return the new manifest version to be updated to
      */
-    public String getNewVersion() {
+    public ManifestVersionPair getNewVersion() {
         return newVersion;
     }
 
@@ -62,4 +62,5 @@ public class ManifestVersionChange {
     public boolean isDowngrade() {
         return isDowngrade;
     }
+
 }
