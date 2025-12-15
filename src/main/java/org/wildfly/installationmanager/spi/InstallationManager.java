@@ -19,6 +19,7 @@
 package org.wildfly.installationmanager.spi;
 
 import org.wildfly.installationmanager.ArtifactChange;
+import org.wildfly.installationmanager.AvailableManifestVersions;
 import org.wildfly.installationmanager.CandidateType;
 import org.wildfly.installationmanager.FileConflict;
 import org.wildfly.installationmanager.InstallationChanges;
@@ -127,7 +128,7 @@ public interface InstallationManager {
      *
      * @param repositories List of repositories to be used to find the available updates. If it is null or an empty list,
      *                     the default repositories will be used instead.
-     * @return {@link InstallationUpdates} collections of artifact and channels that are to be updated.
+     * @return {@link InstallationUpdates} collections of artifact and Wildfly Channel manifests that can be updated.
      * @throws Exception In case of an error.
      */
     InstallationUpdates findInstallationUpdates(List<Repository> repositories) throws Exception;
@@ -138,10 +139,21 @@ public interface InstallationManager {
      * @param repositories List of repositories to be used to find the available updates. If it is null or an empty list,
      *                     the default repositories will be used instead.
      * @param manifestVersions Manifest versions to update to. All subscribed channels have to be specified.
-     * @return {@link InstallationUpdates} collections of artifact and channels that are to be updated.
+     * @return {@link InstallationUpdates} collections of artifact and Wildfly Channel manifests that can be updated.
      * @throws Exception In case of an error.
      */
     InstallationUpdates findInstallationUpdates(List<Repository> repositories, List<ManifestVersion> manifestVersions) throws Exception;
+
+    /**
+     * Lists possible upgrades for subscribed manifests. The results may not include manifests for which no upgrades
+     * are available. Only Maven-based manifests are returned, no upgrades are be listed for URL-based manifests.
+     *
+     * @param repositories List of repositories to be used to find the available updates. If it is null or an empty list,
+     *                     the default repositories will be used instead.
+     * @param includeDowngrades If true, manifest versions lower than currently used manifest version will be listed as well.
+     * @return list of AvailableManifestVersions objects containing manifest info and list of available manifest versions.
+     */
+    List<AvailableManifestVersions> findAvailableManifestVersions(List<Repository> repositories, boolean includeDowngrades) throws Exception;
 
     /**
      * Lists channels the server installation is subscribed to.
