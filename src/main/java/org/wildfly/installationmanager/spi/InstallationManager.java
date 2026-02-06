@@ -18,12 +18,14 @@
 
 package org.wildfly.installationmanager.spi;
 
+import org.wildfly.installationmanager.ArtifactChange;
+import org.wildfly.installationmanager.AvailableManifestVersions;
 import org.wildfly.installationmanager.CandidateType;
 import org.wildfly.installationmanager.FileConflict;
 import org.wildfly.installationmanager.InstallationChanges;
 import org.wildfly.installationmanager.Channel;
 import org.wildfly.installationmanager.HistoryResult;
-import org.wildfly.installationmanager.ArtifactChange;
+import org.wildfly.installationmanager.InstallationUpdates;
 import org.wildfly.installationmanager.ManifestVersion;
 import org.wildfly.installationmanager.OperationNotAvailableException;
 import org.wildfly.installationmanager.Repository;
@@ -65,6 +67,10 @@ public interface InstallationManager {
     /**
      * Prepares an updated version of the server installation in {@code candidatePath}.
      * If no updates are found, this operation does nothing.
+     * <p>
+     * This method throws RuntimeException is the operation would result in subscribed channel manifest being
+     * downgraded. Use {@link #prepareUpdate(Path candidatePath, List repositories, boolean allowManifestDowngrades)}
+     * if you want to allow manifest downgrades.
      *
      * @param candidatePath {@code Path} were the updated version of the server should be located.
      * @param repositories  List of repositories to be used to prepare this update.If it is null or an empty list,
@@ -76,7 +82,39 @@ public interface InstallationManager {
     boolean prepareUpdate(Path candidatePath, List<Repository> repositories) throws Exception;
 
     /**
+     * Prepares an updated version of the server installation in {@code candidatePath}.
+     * If no updates are found, this operation does nothing.
+     *
+     * @param candidatePath {@code Path} were the updated version of the server should be located.
+     * @param repositories  List of repositories to be used to prepare this update.If it is null or an empty list,
+     *                      the default repositories will be used instead.
+     * @param allowManifestDowngrades are manifest downgrades allowed? An attempt do downgrade will result in RuntimeException being thrown if this is false.
+     * @return true if the update candidate was generated, false if candidate was no generated due to not finding any pending updates
+     * @throws IllegalArgumentException if the Path is not writable.
+     * @throws Exception                In case of an error.
+     */
+    boolean prepareUpdate(Path candidatePath, List<Repository> repositories, boolean allowManifestDowngrades) throws Exception;
+
+    /**
+     * Prepares an updated version of the server installation in {@code candidatePath}.
+     * If no updates are found, this operation does nothing.
+     *
+     * @param candidatePath {@code Path} were the updated version of the server should be located.
+     * @param repositories  List of repositories to be used to prepare this update.If it is null or an empty list,
+     *                      the default repositories will be used instead.
+     * @param manifestVersions Manifest versions to update to. All subscribed channels have to be specified.
+     * @param allowManifestDowngrades are manifest downgrades allowed? An attempt do downgrade will result in RuntimeException being thrown if this is false.
+     * @return true if the update candidate was generated, false if candidate was no generated due to not finding any pending updates
+     * @throws IllegalArgumentException if the Path is not writable.
+     * @throws Exception                In case of an error.
+     */
+    boolean prepareUpdate(Path candidatePath, List<Repository> repositories, List<ManifestVersion> manifestVersions, boolean allowManifestDowngrades) throws Exception;
+
+    /**
      * Lists updates available for the server installation.
+     *
+     * @deprecated Deprecated in favour of {@link #findInstallationUpdates(List repositories)}, which returns info
+     *  about upgraded manifests, as well as upgraded artifacts.
      *
      * @param repositories List of repositories to be used to find the available updates. If it is null or an empty list,
      *                     the default repositories will be used instead.
@@ -84,6 +122,38 @@ public interface InstallationManager {
      * @throws Exception In case of an error.
      */
     List<ArtifactChange> findUpdates(List<Repository> repositories) throws Exception;
+
+    /**
+     * Lists updates available for the server installation.
+     *
+     * @param repositories List of repositories to be used to find the available updates. If it is null or an empty list,
+     *                     the default repositories will be used instead.
+     * @return {@link InstallationUpdates} collections of artifact and Wildfly Channel manifests that can be updated.
+     * @throws Exception In case of an error.
+     */
+    InstallationUpdates findInstallationUpdates(List<Repository> repositories) throws Exception;
+
+    /**
+     * Lists updates available for the server installation.
+     *
+     * @param repositories List of repositories to be used to find the available updates. If it is null or an empty list,
+     *                     the default repositories will be used instead.
+     * @param manifestVersions Manifest versions to update to. All subscribed channels have to be specified.
+     * @return {@link InstallationUpdates} collections of artifact and Wildfly Channel manifests that can be updated.
+     * @throws Exception In case of an error.
+     */
+    InstallationUpdates findInstallationUpdates(List<Repository> repositories, List<ManifestVersion> manifestVersions) throws Exception;
+
+    /**
+     * Lists possible upgrades for subscribed manifests. The results may not include manifests for which no upgrades
+     * are available. Only Maven-based manifests are returned, no upgrades are be listed for URL-based manifests.
+     *
+     * @param repositories List of repositories to be used to find the available updates. If it is null or an empty list,
+     *                     the default repositories will be used instead.
+     * @param includeDowngrades If true, manifest versions lower than currently used manifest version will be listed as well.
+     * @return list of AvailableManifestVersions objects containing manifest info and list of available manifest versions.
+     */
+    List<AvailableManifestVersions> findAvailableManifestVersions(List<Repository> repositories, boolean includeDowngrades) throws Exception;
 
     /**
      * Lists channels the server installation is subscribed to.
