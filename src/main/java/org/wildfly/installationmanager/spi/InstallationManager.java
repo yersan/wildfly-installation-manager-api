@@ -93,7 +93,9 @@ public interface InstallationManager {
      * @throws IllegalArgumentException if the Path is not writable.
      * @throws Exception                In case of an error.
      */
-    boolean prepareUpdate(Path candidatePath, List<Repository> repositories, boolean allowManifestDowngrades) throws Exception;
+    default boolean prepareUpdate(Path candidatePath, List<Repository> repositories, boolean allowManifestDowngrades) throws Exception {
+        throw new UnsupportedOperationException("This method is not implemented yet.");
+    }
 
     /**
      * Prepares an updated version of the server installation in {@code candidatePath}.
@@ -108,7 +110,9 @@ public interface InstallationManager {
      * @throws IllegalArgumentException if the Path is not writable.
      * @throws Exception                In case of an error.
      */
-    boolean prepareUpdate(Path candidatePath, List<Repository> repositories, List<ManifestVersion> manifestVersions, boolean allowManifestDowngrades) throws Exception;
+    default boolean prepareUpdate(Path candidatePath, List<Repository> repositories, List<ManifestVersion> manifestVersions, boolean allowManifestDowngrades) throws Exception {
+        throw new UnsupportedOperationException("This method is not implemented yet.");
+    }
 
     /**
      * Lists updates available for the server installation.
@@ -131,7 +135,9 @@ public interface InstallationManager {
      * @return {@link InstallationUpdates} collections of artifact and Wildfly Channel manifests that can be updated.
      * @throws Exception In case of an error.
      */
-    InstallationUpdates findInstallationUpdates(List<Repository> repositories) throws Exception;
+    default InstallationUpdates findInstallationUpdates(List<Repository> repositories) throws Exception {
+        throw new UnsupportedOperationException("This method is not implemented yet.");
+    }
 
     /**
      * Lists updates available for the server installation.
@@ -142,7 +148,9 @@ public interface InstallationManager {
      * @return {@link InstallationUpdates} collections of artifact and Wildfly Channel manifests that can be updated.
      * @throws Exception In case of an error.
      */
-    InstallationUpdates findInstallationUpdates(List<Repository> repositories, List<ManifestVersion> manifestVersions) throws Exception;
+    default InstallationUpdates findInstallationUpdates(List<Repository> repositories, List<ManifestVersion> manifestVersions) throws Exception {
+        throw new UnsupportedOperationException("This method is not implemented yet.");
+    }
 
     /**
      * Lists possible upgrades for subscribed manifests. The results may not include manifests for which no upgrades
@@ -153,7 +161,9 @@ public interface InstallationManager {
      * @param includeDowngrades If true, manifest versions lower than currently used manifest version will be listed as well.
      * @return list of AvailableManifestVersions objects containing manifest info and list of available manifest versions.
      */
-    List<AvailableManifestVersions> findAvailableManifestVersions(List<Repository> repositories, boolean includeDowngrades) throws Exception;
+    default List<AvailableManifestVersions> findAvailableManifestVersions(List<Repository> repositories, boolean includeDowngrades) throws Exception {
+        throw new UnsupportedOperationException("This method is not implemented yet.");
+    }
 
     /**
      * Lists channels the server installation is subscribed to.
